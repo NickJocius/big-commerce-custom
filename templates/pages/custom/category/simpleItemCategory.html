@@ -8,6 +8,7 @@ cart: true
 ---
 {{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
 {{inject "categoryId" category.id}}
+{{inject "cartID" cart.cart_id}}
 {{#partial "head"}}
     {{#if pagination.category.previous}}
         <link rel="prev" href="{{pagination.category.previous}}">
@@ -52,12 +53,12 @@ cart: true
     {{/if}}
 
     
-
+    {{}}
     <div class="page-content" id="product-listing-container">
-        {{log 'cart' cart}}
+        {{log 'cart' cart_id}}
         <button type="button" id="addAll" class="button button--primary" value="{{pluck (limit category.products 1) 'id'}}">Add all to Cart</button>
         {{#if cart.items}}
-        <button type="button" id="removeAll" class="button button--primary" value="{{pluck (limit category.products 1) 'id'}}">Remove All Items</button>
+        <button type="button" id="removeAll" class="button button--primary" value="{{cart_id}}">Remove All Items</button>
         {{/if}}
         {{> components/category/product-listing}}
         {{{region name="category_below_content"}}}

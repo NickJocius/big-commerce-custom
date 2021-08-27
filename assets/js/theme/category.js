@@ -10,6 +10,8 @@ const { hooks } = utils;
 export default class Category extends CatalogPage {
     constructor(context) {
         super(context);
+        this.cartId = this.context ? this.context.cartId : null;
+        this.productId = this.context;
         this.validationDictionary = createTranslationDictionary(context);
     }
 
@@ -32,31 +34,26 @@ export default class Category extends CatalogPage {
     }
 
     onReady() {
-       
         this.arrangeFocusOnSortBy();
-
+        console.log(this.productId);
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
 
         this.makeShopByPriceFilterAccessible();
 
         compareProducts(this.context);
 
+        // event handler for addAll button
         $('button#addAll').on('click', (e) => {
             e.preventDefault();
+            console.log(this.cartId);
             let id = parseInt(document.getElementById('addAll').value);
+            this.addToCart(this.productId, this.cartId);
+        });
 
-            let url = `http://localhost:3000/cart.php?action=add&product_id=${id}`;
-            this.createCart(url, {
-                "lineItems": [
-                    {
-                        
-                        "productId": id
-                    }
-                ]
-            })
-            .then(data => console.log(JSON.stringify(data)))
-            .catch(error => console.error(error));
-            this.addToCart();
+        $('button#removeAll').on('click', (e) => {
+            e.preventDefault();
+            let newCartId = document.getElementById('removeAll').value;
+            this.cartRemoveItem(newCartId);
         });
 
         if ($('#facetedSearch').length > 0) {
@@ -71,66 +68,58 @@ export default class Category extends CatalogPage {
         this.ariaNotifyNoProducts();
     }
 
-    cartRemoveItem(itemId,secureBaseUrl) {
+    cartRemoveItem(cartId) {
+        let url = `${secureBaseUrl}/carts/${cartId}`;
         
-        utils.api.cart.itemRemove(itemId, (err, response) => {
-            if (response.data.status === 'succeed') {
-                cartPreview(secureBaseUrl);
+        fetch(url, {
+            method: "DELETE",
+            credentials: "include",
+        }).then(response => response.json())
+            .then(() => {
                 swal.fire({
                     text: 'Items Removed',
-                    icon: 'error',
-                });
-            } else {
-                swal.fire({
-                    text: response.data.errors.join('\n'),
-                    icon: 'error',
-                });
-            }
-        });
-    }
-
-    createCart(url, cartItems,secureBaseUrl) {
-        
-        return fetch(url, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(cartItems),
-        }).then(response => response.json())
-            .then(this.getCart(secureBaseUrl),
-                swal.fire({
-                    text: 'Items Added',
                     icon: 'success',
-                })
-        ).catch((errors) => {
-            swal.fire({
-                text: response.data.errors.join('\n'),
-                icon: 'error',
-            });
-        });
+                });
+            }).catch(errors => {
+                console.log(errors);
+        })
     }
 
-    addToCart() {
-        
-        if (utils.tools.storage.localStorageAvailable()) {
-            if (localStorage.getItem('cart-quantity')) {
-                let quantity = Number(localStorage.getItem('cart-quantity'));
-                localStorage.setItem('cart-quantity', ++quantity);
+    addToCart(productId,cartId) {
+        let url = cartId ? `/api/storefront/carts/${cartId}/items` : `/api/storefront/carts`;
+        let data = {
+            lineItems: [{
+                quantity: 1,
+                productId: productId
+            }
+            ]
+        }
+        let options = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            credentials: 'include',
+            headers: {
+                "Content-type": "application/json"
             }
         }
+        return fetch(url, options)
+            .then(response => response.json())
+            .then(function(jdata) {
+                this.cartId = jdata.data;
+                console.log(cartId);
+            })
+            .catch(err => console.log(err));
     }
     
-    getCart(secureBaseUrl) {
-        fetch('http://localhost:3000/api/storefront/carts', {
+    getCart(secureBaseUrl, newCartId) {
+        fetch('http://localhost:3000/carts', {
             credentials: 'include'
         }).then(function (response) {
             return response.json();
         }).then(function (myjson) {
             console.log(myjson);
-            cartPreview(secureBaseUrl, myjson[0].id);
-        });
+            cartPreview(secureBaseUrl, newCartId);
+        })
         
     }
 
