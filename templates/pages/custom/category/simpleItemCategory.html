@@ -8,20 +8,20 @@ cart: true
 {{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
 {{inject "categoryId" category.id}}
 <script type="text/javascript">
+    
     function customerJWT() {
         var appClientId = "abvohp5d4rfvuvxoo0k150zvgl89hdd"; // TODO: Fill this in with your app's client ID
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 ) {
                if (xmlhttp.status == 200) {
-                   alert('Customer JWT:\n' + xmlhttp.responseText);
-                   const custData = JSON.parse(xmlhttp.responseText);
+                   console.log(xmlhttp.responseText);
                }
                else if (xmlhttp.status == 404) {
-                  alert('Not logged in!');
+                  console.log('Not logged in!');
                }
                else {
-                   alert('Something went wrong');
+                   console.log('Something went wrong');
                }
             }
         };
@@ -73,19 +73,30 @@ cart: true
         {{/if}}
     {{/if}}
 
-    
-    
+    {{inject 'custDataId' custData.id}}
+    {{#if customer}}
     <div class="page-content" id="product-listing-container">
-        <span>{{custData.id}}</span>
-        <form id="cartForm">
-            {{log 'productId' category.products.[0].id}}
-            <input type="hidden" name="productId" value="{{pluck (limit category.products 1) 'id'}}"/>
-            <button type="submit" id="addAll" class="button button--primary" >Add all to Cart</button>
-        </form>
-        {{log 'cartItems' cart.items}}
-        {{#if cart.items}}
-        <button type="submit" id="removeAll" class="button button--primary">Remove All Items</button>
-        {{/if}}
+        <div class="customer-container" style="min-width: 100;">
+                <ul style="display: flex; flex-direction: row; justify-content: space-around; list-style: none; font-weight: bold; font-size: larger;">
+                    <li class="">{{customer.id}}</li>
+                    <li class="">{{customer.name}}</li>
+                    <li class="">{{customer.email}}</li>
+                    <li class="">{{customer.phone}}</li>
+                </ul>  
+        </div>
+    {{/if}}
+        <div class="" style="display: flex; flex-direction: row; justify-content: space-evenly;">
+            <form id="cartForm">
+                {{log 'productId' category.products.[0].id}}
+                <input class="form-label" type="hidden" name="productId" value="{{pluck (limit category.products 1) 'id'}}"/>
+                <button type="submit" id="addAll" class="button button--primary" >Add all to Cart</button>
+            </form>
+            {{log 'cartItems' cart.items}}
+            {{#if cart.items}}
+            <button type="submit" id="removeAll" class="button button--primary" >Remove All Items</button>
+            {{/if}}
+        </div>
+        
         {{> components/category/product-listing}}
         {{{region name="category_below_content"}}}
     </div>
