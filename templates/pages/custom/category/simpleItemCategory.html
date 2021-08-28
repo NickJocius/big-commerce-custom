@@ -40,7 +40,27 @@ cart: true
 {{/partial}}
 
 {{#partial "page"}}
-
+{{#if customer}}
+<div class="customer-container" style="min-width: 100;">
+        <ul style="display: flex; flex-direction: row; justify-content: space-around; list-style: none; font-weight: bold; font-size: larger;">
+            <li class="">ID - {{customer.id}}</li>
+            <li class="">Name - {{customer.name}}</li>
+            <li class="">Email - {{customer.email}}</li>
+            <li class="">Phone - {{customer.phone}}</li>
+        </ul>  
+</div>
+{{/if}}
+<div class="" style="display: flex; flex-direction: row; justify-content: space-evenly;">
+    <form id="cartForm">
+       
+        <input class="form-label" type="hidden" name="productId" value="{{pluck (limit category.products 1) 'id'}}"/>
+        <button type="submit" id="addAll" class="button button--primary" >Add all to Cart</button>
+    </form>
+    
+    {{#if cart.items}}
+    <button type="submit" id="removeAll" class="button button--primary" >Remove All Items</button>
+    {{/if}}
+</div>
 {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
 {{#if category.image}}
     {{> components/common/responsive-img
@@ -74,28 +94,9 @@ cart: true
     {{/if}}
 
     {{inject 'custDataId' custData.id}}
-    {{#if customer}}
+    
     <div class="page-content" id="product-listing-container">
-        <div class="customer-container" style="min-width: 100;">
-                <ul style="display: flex; flex-direction: row; justify-content: space-around; list-style: none; font-weight: bold; font-size: larger;">
-                    <li class="">{{customer.id}}</li>
-                    <li class="">{{customer.name}}</li>
-                    <li class="">{{customer.email}}</li>
-                    <li class="">{{customer.phone}}</li>
-                </ul>  
-        </div>
-    {{/if}}
-        <div class="" style="display: flex; flex-direction: row; justify-content: space-evenly;">
-            <form id="cartForm">
-                {{log 'productId' category.products.[0].id}}
-                <input class="form-label" type="hidden" name="productId" value="{{pluck (limit category.products 1) 'id'}}"/>
-                <button type="submit" id="addAll" class="button button--primary" >Add all to Cart</button>
-            </form>
-            {{log 'cartItems' cart.items}}
-            {{#if cart.items}}
-            <button type="submit" id="removeAll" class="button button--primary" >Remove All Items</button>
-            {{/if}}
-        </div>
+
         
         {{> components/category/product-listing}}
         {{{region name="category_below_content"}}}

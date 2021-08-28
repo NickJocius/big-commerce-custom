@@ -8,27 +8,27 @@ a06fcyfhwa
 
 https://obundletest5.mybigcommerce.com/
 
+## Customer Login
+
+email: capacity512@yahoo.com
+pw: abcd1234
+
 ### Steps Taken
 
-Having never worked with stencil or Big Commerce, I took a lot of time reading through the docs, this took
-about a day for it to start to sink in.
-
-I decided to create a custom pages directory and added my custom category named simpleItemCategory to the
-config.stencil.json. Creating this was necessary to avoid my changes effecting all other categories.
-
-I created two buttons above the product grid and below the category header, this seemed like a logical place to
-position them. I conditionally hid the removeAll button if the cart array was empty.
-
-I created a product through the big commerce control panel and added 3 images with a description and other attributes.
-
-I decided to built all my funcionality within the category.js file, this would be accessable by my new simpleItemCategory.html
-and considering the time restrictions, allowed me the greatest chance of completion.
-
-I used jquery to access my two buttons from the DOM and registerd onClick handlers for both.
-
-I created functions called cartRemoveItem, createCart, getCart, and addToCart
-
-cartRemoveItem uses the storefront API and is called when removeAll button is clicked. It uses fetch to send a DELETE http request using the cartId as a parameter and deletes the entire cart. It then registers a pop up and displays success.
-
-createCart sends a post request to the storefront API /carts to
-create a new cart and return the new cartId.
+1. added custom catergory page named simpleItemCategory
+2. mapped custom page on config.stencil.json
+3. created product from storefront control panel
+4. created category from storefront control panel and added custom template
+5. decided to use category.js to add custom javascript
+6. imported swal to use as alert pop up for user triggered events
+7. declared variables cartId, secureBaseUrl, and cartUrl from context
+8. created addAllToCart function:
+   > > This function takes base url, cart url and product Id as arguments.
+   > > it add item to cart or creates and add product to new cart if one doesn't exist.
+   > > It makes an http post request using the add to cart url, the sweet alert is triggerd on success or failure.
+9. created removeAll function:
+   > > This function takes the cart id as parameter and makes a DELETE request to the delete cart endpoint. The sweet alert is used for notifying of error or success.
+10. I created a form on the html page when submited created form data with the product id. The form data is passed to the request and the page is reloaded to update the navbar cart quantity.
+11. I added a remove all button which triggers the removeAll function on click event. The page is then reloaded to update cart quantity.
+12. I used in-line styling to style the new html elements.
+13. I created an element above the added form and buttons that displays the customers id, name, email and phone.

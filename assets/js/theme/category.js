@@ -3,7 +3,6 @@ import CatalogPage from './catalog';
 import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
 import { createTranslationDictionary } from '../theme/common/utils/translations-utils';
-import cartPreview from './global/cart-preview';
 import swal from './global/sweet-alert';
 const { hooks } = utils;
 export default class Category extends CatalogPage {
@@ -80,10 +79,6 @@ export default class Category extends CatalogPage {
         this.ariaNotifyNoProducts();
     }
 
-    // get and display customer info
-    getCustomerInfo() {
-        console.log();
-    }
     // add all items function
     addAllToCart( url, cartUrl,productId) {
         return fetch(`${url}${cartUrl}?action=add&product_id=${productId}`, {
