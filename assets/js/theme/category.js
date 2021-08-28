@@ -73,14 +73,14 @@ export default class Category extends CatalogPage {
             }
         });
 
-        $('.card-image').on('mouseover', function () {
-            $(this).attr('src', rollOvers[0].toString());
-            console.log(rollOvers[0].toString());
-            console.log(this);
-        }).on('mouseout', function () {
-            $(this).attr('src', mainImages[0].toString());
-            console.log(this);
-            console.log(mainImages[0].toString())
+        rollOvers.forEach(function (image, id) {
+            image = image.replace('{:size}', '500x659');
+            $('.card-image').on(" mouseover", function () {
+                $(this).attr('srcset', image);
+ 
+            }).on('mouseout', function () {
+                    $(this).attr('srcset', mainImages[0].replace('{:size}', '500x659'));
+                 })
         })
 
 
