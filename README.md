@@ -15,7 +15,9 @@ https://github.com/NickJocius/oBundleTest
 ## Customer Login
 
 To use sign in
+
 email: capacity512@yahoo.com
+
 pw: abcd1234
 
 ### Steps Taken
