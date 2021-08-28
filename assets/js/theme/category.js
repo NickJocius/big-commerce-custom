@@ -33,12 +33,12 @@ export default class Category extends CatalogPage {
         this.arrangeFocusOnSortBy();
         // get card image from dom
         console.log(this.context);
-
         let cartId = this.context.cartId;
         const secureBaseUrl = this.context.secureBaseUrl;
         const cartUrl = this.context.urls.cart;
         // set variable as function to use in jquery
         let addAll = this.addAllToCart;
+        let remAll = this.removeAll;
         // define function
         function addCartTriggered(url, cUrl, pId) {
             addAll(url, cUrl, pId);
@@ -51,15 +51,15 @@ export default class Category extends CatalogPage {
             let pId = formData.get('productId');
 
             addCartTriggered(secureBaseUrl, cartUrl, pId);
+            setTimeout(location.reload.bind(location), 3000);
         })
         // button removeAll click event handler
         $('#removeAll').on('click', function (event) {
             event.preventDefault();
-
+            remAll(cartId);
+            setTimeout(location.reload.bind(location), 3000);
         })
 
-        
-        
         
 
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
@@ -79,21 +79,59 @@ export default class Category extends CatalogPage {
 
         this.ariaNotifyNoProducts();
     }
+
+    // get and display customer info
+    getCustomerInfo() {
+        console.log();
+    }
     // add all items function
     addAllToCart( url, cartUrl,productId) {
         return fetch(`${url}${cartUrl}?action=add&product_id=${productId}`, {
-            credentials: 'include'
-        }).then(function (res) {
-            if (res.status == 'ok') {
-                return res.json();
+            credentials: 'include',
+        }).then(function (response) {
+            if (response.status == 'ok') {
+                return response.json();
+            } else {
+                swal.fire({
+                    text: 'Error Adding',
+                    icon: 'error',
+                });
             }
         })
-            .then(data => console.log(data))
+            .then(function (res) {
+                console.log(res);
+                swal.fire({
+                    text: 'Added All Items',
+                    icon: 'success',
+                });
+            })
             .catch(err => console.log(err));
     }
     // remove all from cart function
-    removeAll(cartId) {
-        console.log(this.context);
+    removeAll( cartId) {
+        return fetch(`/api/storefront/carts/${cartId}`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then(function (response) {
+            if (response == 'ok') {
+                return response.json();
+            } else {
+                swal.fire({
+                    text: 'Error Removing',
+                    icon: 'error',
+                });
+            }
+        }).then(function (res) {
+            console.log(res);
+            swal.fire({
+                text: 'Removed All Items',
+                icon: 'success',
+            });
+          })
+            .catch(err => console.log(err));
     }
 
 

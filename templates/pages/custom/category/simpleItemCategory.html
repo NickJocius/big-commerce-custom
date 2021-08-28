@@ -7,7 +7,29 @@ cart: true
 ---
 {{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
 {{inject "categoryId" category.id}}
-
+<script type="text/javascript">
+    function customerJWT() {
+        var appClientId = "abvohp5d4rfvuvxoo0k150zvgl89hdd"; // TODO: Fill this in with your app's client ID
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 ) {
+               if (xmlhttp.status == 200) {
+                   alert('Customer JWT:\n' + xmlhttp.responseText);
+                   const custData = JSON.parse(xmlhttp.responseText);
+               }
+               else if (xmlhttp.status == 404) {
+                  alert('Not logged in!');
+               }
+               else {
+                   alert('Something went wrong');
+               }
+            }
+        };
+        xmlhttp.open("GET", "/customer/current.jwt?app_client_id="+appClientId, true);
+        xmlhttp.send();
+    }
+    customerJWT();
+    </script>
 {{#partial "head"}}
     {{#if pagination.category.previous}}
         <link rel="prev" href="{{pagination.category.previous}}">
@@ -54,13 +76,13 @@ cart: true
     
     
     <div class="page-content" id="product-listing-container">
-        <p>{{pluck (limit category.products 1) 'id'}}</p>
+        <span>{{custData.id}}</span>
         <form id="cartForm">
             {{log 'productId' category.products.[0].id}}
-            
             <input type="hidden" name="productId" value="{{pluck (limit category.products 1) 'id'}}"/>
             <button type="submit" id="addAll" class="button button--primary" >Add all to Cart</button>
         </form>
+        {{log 'cartItems' cart.items}}
         {{#if cart.items}}
         <button type="submit" id="removeAll" class="button button--primary">Remove All Items</button>
         {{/if}}
