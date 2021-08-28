@@ -35,6 +35,9 @@ export default class Category extends CatalogPage {
         let cartId = this.context.cartId;
         const secureBaseUrl = this.context.secureBaseUrl;
         const cartUrl = this.context.urls.cart;
+        let catProds = this.context.categoryProducts;
+        let prodImg = this.context.categoryProducts[0].image;
+        console.log(prodImg);
         // set variable as function to use in jquery
         let addAll = this.addAllToCart;
         let remAll = this.removeAll;
@@ -59,7 +62,27 @@ export default class Category extends CatalogPage {
             setTimeout(location.reload.bind(location), 3000);
         })
 
-        
+        var mainImages = [];
+        var rollOvers = [];
+        catProds.forEach(function(e, i) {
+            if (e.image.data) {
+            mainImages[0] = e.image.data;
+            }
+            if (e.images[0]) {
+            rollOvers[0] = e.images[0].data;
+            }
+        });
+
+        $('.card-image').on('mouseover', function () {
+            $(this).attr('src', rollOvers[0].toString());
+            console.log(rollOvers[0].toString());
+            console.log(this);
+        }).on('mouseout', function () {
+            $(this).attr('src', mainImages[0].toString());
+            console.log(this);
+            console.log(mainImages[0].toString())
+        })
+
 
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
 

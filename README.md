@@ -32,3 +32,7 @@ pw: abcd1234
 11. I added a remove all button which triggers the removeAll function on click event. The page is then reloaded to update cart quantity.
 12. I used in-line styling to style the new html elements.
 13. I created an element above the added form and buttons that displays the customers id, name, email and phone.
+
+## Test Notes
+
+Having never worked with BigCommerce or stencil, this test required a significant amount of time dedicated to study and research. I had some exposure to handlebars during my degree and needed a refresher. Given how much I have learned about using this platform in only 4 days, I am confident with a little more time I could fully grasp all concepts and maintain a strict adherence to it's structure and patterns. This test has only made me more curious and determined to master the platform and I will continue to learn its concepts regardless of any outcome.
