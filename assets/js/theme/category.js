@@ -6,15 +6,11 @@ import { createTranslationDictionary } from '../theme/common/utils/translations-
 import cartPreview from './global/cart-preview';
 import swal from './global/sweet-alert';
 const { hooks } = utils;
-
 export default class Category extends CatalogPage {
     constructor(context) {
         super(context);
-        this.cartId = this.context ? this.context.cartId : null;
-        this.productId = this.context;
         this.validationDictionary = createTranslationDictionary(context);
     }
-
 
     setLiveRegionAttributes($element, roleType, ariaLiveStatus) {
         $element.attr({
@@ -35,26 +31,42 @@ export default class Category extends CatalogPage {
 
     onReady() {
         this.arrangeFocusOnSortBy();
-        console.log(this.productId);
+        // get card image from dom
+        console.log(this.context);
+
+        let cartId = this.context.cartId;
+        const secureBaseUrl = this.context.secureBaseUrl;
+        const cartUrl = this.context.urls.cart;
+        // set variable as function to use in jquery
+        let addAll = this.addAllToCart;
+        // define function
+        function addCartTriggered(url, cUrl, pId) {
+            addAll(url, cUrl, pId);
+        }
+        // use form data to hit cart api on submit on submit event
+        $('#cartForm').on('submit', function (event) {
+            event.preventDefault();
+            const formData = new URLSearchParams(new FormData(this));
+            console.log(formData.get('productId'));
+            let pId = formData.get('productId');
+
+            addCartTriggered(secureBaseUrl, cartUrl, pId);
+        })
+        // button removeAll click event handler
+        $('#removeAll').on('click', function (event) {
+            event.preventDefault();
+
+        })
+
+        
+        
+        
+
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
 
         this.makeShopByPriceFilterAccessible();
 
         compareProducts(this.context);
-
-        // event handler for addAll button
-        $('button#addAll').on('click', (e) => {
-            e.preventDefault();
-            console.log(this.cartId);
-            let id = parseInt(document.getElementById('addAll').value);
-            this.addToCart(this.productId, this.cartId);
-        });
-
-        $('button#removeAll').on('click', (e) => {
-            e.preventDefault();
-            let newCartId = document.getElementById('removeAll').value;
-            this.cartRemoveItem(newCartId);
-        });
 
         if ($('#facetedSearch').length > 0) {
             this.initFacetedSearch();
@@ -67,61 +79,25 @@ export default class Category extends CatalogPage {
 
         this.ariaNotifyNoProducts();
     }
-
-    cartRemoveItem(cartId) {
-        let url = `${secureBaseUrl}/carts/${cartId}`;
-        
-        fetch(url, {
-            method: "DELETE",
-            credentials: "include",
-        }).then(response => response.json())
-            .then(() => {
-                swal.fire({
-                    text: 'Items Removed',
-                    icon: 'success',
-                });
-            }).catch(errors => {
-                console.log(errors);
+    // add all items function
+    addAllToCart( url, cartUrl,productId) {
+        return fetch(`${url}${cartUrl}?action=add&product_id=${productId}`, {
+            credentials: 'include'
+        }).then(function (res) {
+            if (res.status == 'ok') {
+                return res.json();
+            }
         })
-    }
-
-    addToCart(productId,cartId) {
-        let url = cartId ? `/api/storefront/carts/${cartId}/items` : `/api/storefront/carts`;
-        let data = {
-            lineItems: [{
-                quantity: 1,
-                productId: productId
-            }
-            ]
-        }
-        let options = {
-            method: 'POST',
-            body: JSON.stringify(data),
-            credentials: 'include',
-            headers: {
-                "Content-type": "application/json"
-            }
-        }
-        return fetch(url, options)
-            .then(response => response.json())
-            .then(function(jdata) {
-                this.cartId = jdata.data;
-                console.log(cartId);
-            })
+            .then(data => console.log(data))
             .catch(err => console.log(err));
     }
-    
-    getCart(secureBaseUrl, newCartId) {
-        fetch('http://localhost:3000/carts', {
-            credentials: 'include'
-        }).then(function (response) {
-            return response.json();
-        }).then(function (myjson) {
-            console.log(myjson);
-            cartPreview(secureBaseUrl, newCartId);
-        })
-        
+    // remove all from cart function
+    removeAll(cartId) {
+        console.log(this.context);
     }
+
+
+
 
     ariaNotifyNoProducts() {
         const $noProductsMessage = $('[data-no-products-notification]');

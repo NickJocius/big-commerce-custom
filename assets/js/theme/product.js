@@ -59,6 +59,8 @@
          });
  
          this.productReviewHandler();
+
+         
      }
  
      ariaDescribeReviewInputs($form) {
