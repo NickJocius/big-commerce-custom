@@ -61,9 +61,10 @@ export default class Category extends CatalogPage {
             remAll(cartId);
             setTimeout(location.reload.bind(location), 3000);
         })
-
+        // set two empty arrays to hold current image and next image
         var mainImages = [];
         var rollOvers = [];
+        // add images to arrays
         catProds.forEach(function(e, i) {
             if (e.image.data) {
             mainImages[0] = e.image.data;
@@ -72,7 +73,7 @@ export default class Category extends CatalogPage {
             rollOvers[0] = e.images[0].data;
             }
         });
-
+        // need to change variables or error will occur
         rollOvers.forEach(function (image, id) {
             image = image.replace('{:size}', '500x659');
             $('.card-image').on(" mouseover", function () {
