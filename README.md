@@ -44,7 +44,3 @@ All changes are made in simpleItemCategory.html, category.html and category.js a
     > > This required creating an app to gain access to the clientId and inserting a script into the simpleItemCategory.html. The script makes and XMLhttp request.
 14. I created a series of functions to change image on hover.
     > > I used jquery to access the card-image and created two empty arrays to add images to. Then as I looped over the image array I changed the size variables to not revieve error then added on mouseover event to change to second image and on mouseout changed back to original image.
-
-## Test Notes
-
-Having never worked with BigCommerce or stencil, this test required a significant amount of time dedicated to study and research. I had some exposure to handlebars during my degree and needed a refresher. Given how much I have learned about using this platform in only 4 days, I am confident with a little more time I could fully grasp all concepts and maintain a strict adherence to it's structure and patterns. This test has only made me more curious and determined to master the platform and I will continue to learn its concepts regardless of any outcome.
