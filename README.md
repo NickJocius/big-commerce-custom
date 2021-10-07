@@ -1,25 +1,3 @@
-# oBundle BigCommerce - Stencil Test
-
-## Preview Code
-
-a06fcyfhwa
-
-## URL
-
-https://obundletest5.mybigcommerce.com/
-
-## GitHub repo
-
-https://github.com/NickJocius/oBundleTest
-
-## Customer Login
-
-To use sign in
-
-email: capacity512@yahoo.com
-
-pw: abcd1234
-
 ### Steps Taken
 
 All changes are made in simpleItemCategory.html, category.html and category.js after bringing in the template into my local enviornment.

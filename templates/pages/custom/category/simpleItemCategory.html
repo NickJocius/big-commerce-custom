@@ -39,7 +39,7 @@ cart: true
         <link rel="next" href="{{pagination.category.next}}">
     {{/if}}
 {{/partial}}
-
+<!-- Added div to display customer information if customer is logged in-->
 {{#partial "page"}}
 {{#if customer}}
 <div class="customer-container" style="min-width: 100;">
@@ -50,6 +50,7 @@ cart: true
             <li class="">Phone - {{customer.phone}}</li>
         </ul>  
 </div>
+<!-- Added Form to add products in category to cart/remove all items from cart-->
 {{/if}}
 <div class="" style="display: flex; flex-direction: row; justify-content: space-evenly;">
     <form id="cartForm">
